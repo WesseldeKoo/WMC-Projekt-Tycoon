@@ -1,0 +1,148 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #d7ccc8;
+    overflow: hidden;
+  }
+
+  .game-ui {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .header {
+    background: #5d4037;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .game-area {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .sidebar {
+    width: 80px;
+    background-color: #3e2723;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .arrow-btn {
+    width: 36px;
+    height: 36px;
+    margin: 8px;
+    background-color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .mine {
+    flex: 1;
+    background-color: #bcaaa4;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .shaft {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    height: 100px;
+    border-bottom: 2px solid #8d6e63;
+    position: relative;
+  }
+
+  .elevator {
+    width: 60px;
+    background-color: #4e342e;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  .elevator-car {
+    width: 60px;
+    height: 40px;
+    background-color: #212121;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eee;
+    position: absolute;
+    top: 0;
+    border-radius: 2px;
+    transition: top 1s linear; /* Hier wichtig! */
+  }
+  
+
+  .worker {
+    width: 40px;
+    height: 40px;
+    background-color: #fdd835;
+    border: 2px solid #fbc02d;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    margin-left: 80px;
+    transition: transform 0.4s linear;
+    z-index: 2;
+  }
+  .mine {
+    position: relative;
+  }
+  
+
+  .dirt {
+    flex: 1;
+    height: 40px;
+    background-color: #a1887f;
+    margin-left: 20px;
+    border: 1px dashed #4e342e;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    background-color: #6d4c41;
+    opacity: 0.8;
+    z-index: 1;
+    transition: width 0.3s;
+  }
+
+  .upgrade-btn {
+    margin-left: 10px;
+    font-size: 12px;
+    height: 30px;
+  }
+
+  .footer {
+    background-color: #3e2723;
+    color: white;
+    padding: 10px;
+    width: 100%;
+  }

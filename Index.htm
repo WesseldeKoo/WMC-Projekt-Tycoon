@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Idle Miner Tycoon</title>
+
+  <!-- Bootstrap-Stile -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Spielfeld-Container -->
+  <div class="game-ui">
+
+    <!-- Kopfzeile mit Geldanzeige -->
+    <div class="header w-100">
+      GELD: $<span id="cash">0</span>
+    </div>
+
+    <!-- Hauptspielfeld -->
+    <div class="game-area">
+      
+      <!-- Seitenleiste mit Pfeil-Buttons -->
+      <div class="sidebar">
+        <button class="arrow-btn">▲</button>
+        <button class="arrow-btn">▼</button>
+      </div>
+
+      <!-- Mine mit Fahrstuhl -->
+      <div class="flex-grow-1 position-relative">
+        <div class="mine" id="mine">
+          <div class="elevator">
+            <div class="elevator-car" id="elevator-car">1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fußzeile mit "Neuer Schacht"-Button -->
+    <div class="footer text-center">
+      <button class="btn btn-warning fw-bold px-4" onclick="buyShaft()">Neuer Schacht $1000</button>
+    </div>
+  </div>
+
+  <!-- SPIELLogik -->
+  <script>
+    // Spielstand
+    let cash = 0; // Startgeld
+    let shaftCount = 0; // Anzahl der Schächte
+
+    // DOM-Elemente
+    const elevatorCar = document.getElementById('elevator-car');
+    const mine = document.getElementById('mine');
+
+    // Aktualisiert die Geldanzeige oben
+    function updateCashDisplay() {
+      document.getElementById('cash').textContent = cash;
+    }
+
+    // Funktion zum Kaufen eines neuen Schachts
+    function buyShaft() {
+      const cost = 1000;
+      if (cash >= cost) {
+        cash -= cost;
+        addShaft(); // neuen Schacht hinzufügen
+        updateCashDisplay();
+      } else {
+        alert("Nicht genug Geld!");
+      }
+    }
+
+// Fügt einen neuen Schacht hinzu
+function addShaft() {
+  shaftCount++; // Erhöhe die Anzahl der Schächte
+
+  // Erstelle die HTML-Elemente für den Schacht
+  const shaft = document.createElement('div');
+  shaft.className = 'shaft';
+
+  const worker = document.createElement('div');
+  worker.className = 'worker';
+
+  const dirt = document.createElement('div');
+  dirt.className = 'dirt';
+
+  const progress = document.createElement('div');
+  progress.className = 'progress-bar-fill';
+  dirt.appendChild(progress);
+
+  const upgradeButton = document.createElement('button');
+  upgradeButton.className = 'btn btn-sm btn-success upgrade-btn';
+  let level = 1; // Startlevel des Schachts
+  upgradeButton.textContent = `Upgrade (Lv ${level})`;
+
+  let busy = false; // Gibt an, ob der Arbeiter gerade beschäftigt ist
+
+  // Startet automatisches Arbeiten (ab Level 10)
+  function startAutoMining() {
+    setInterval(() => {
+      if (!busy) {
+        worker.click(); // Simuliere einen Klick auf den Arbeiter
+      }
+    }, 2000); // Arbeitet alle 2 Sekunden
+  }
+
+  // Klickfunktion des Arbeiters
+  worker.onclick = () => {
+    if (busy) return; // Arbeiter ist bereits beschäftigt
+    busy = true;
+
+    const steps = 10; // Anzahl der Fortschrittsschritte
+    let current = 0;
+
+    // Fortschrittsanzeige
+    const interval = setInterval(() => {
+      current++;
+      progress.style.width = `${current * 10}%`; // Fortschritt aktualisieren
+
+      if (current === steps) {
+        clearInterval(interval); // Fortschritt abgeschlossen
+        cash += 100 * level; // Einkommen basierend auf dem Level
+        updateCashDisplay();
+
+        setTimeout(() => {
+          progress.style.width = '0%'; // Fortschritt zurücksetzen
+          busy = false; // Arbeiter ist wieder verfügbar
+        }, 500);
+      }
+    }, 100); // Fortschrittsintervall
+  };
+
+  // Upgrade-Button Funktion
+  upgradeButton.onclick = () => {
+    const cost = level * 500; // Upgrade-Kosten basierend auf dem Level
+    if (cash >= cost) {
+      cash -= cost; // Kosten abziehen
+      level++; // Level erhöhen
+      upgradeButton.textContent = `Upgrade (Lv ${level})`; // Button-Text aktualisieren
+      updateCashDisplay();
+
+      // Auto-Mining aktivieren bei Level 10
+      if (level === 10) {
+        startAutoMining();
+      }
+    } else {
+      alert("Nicht genug Geld für ein Upgrade!"); // Fehlermeldung anzeigen
+    }
+  };
+
+  // Schacht zusammensetzen
+  shaft.appendChild(worker);
+  shaft.appendChild(dirt);
+  shaft.appendChild(upgradeButton);
+  mine.appendChild(shaft);
+}
+
+    // Bewegt den Fahrstuhl durch die Schächte
+    function moveElevatorToShafts() {
+      const interval = 1000;
+      let index = 0;
+
+      function moveNext() {
+        const shafts = document.querySelectorAll('.shaft');
+        if (shafts.length === 0) return;
+
+        const target = shafts[index];
+        const topOffset = target.offsetTop;
+
+        // Fahrstuhl-Animation
+        elevatorCar.style.transition = 'top 1s linear';
+        elevatorCar.style.top = topOffset + 'px';
+
+        // nächster Schacht
+        index = (index + 1) % shafts.length;
+
+        // Warten vor dem nächsten Ziel
+        setTimeout(moveNext, interval + 1000);
+      }
+
+      moveNext();
+    }
+
+    // Spielstart
+    window.onload = () => {
+      addShaft();             // Ersten Schacht hinzufügen
+      moveElevatorToShafts(); // Fahrstuhl in Bewegung setzen
+    };
+  </script>
+</body>
+</html>
